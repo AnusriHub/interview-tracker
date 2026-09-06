@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>Applications</title></head>
+<body>
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Applications</h1>
+            <p class="page-subtitle" th:text="${applications.size()} + ' total'">0 total</p>
+        </div>
+        <a th:href="@{/applications/new}" class="btn btn-primary">+ Add Application</a>
+    </div>
+
+    <form th:action="@{/applications}" method="get" class="filter-bar">
+        <div class="search-box">
+<!--            <span class="search-icon">&#x1F50D;</span>-->
+            <input type="text" name="search" placeholder="Search company or role..."
+                   th:value="${currentSearch}" class="search-input" id="searchInput">
+        </div>
+        <div class="filter-chips">
+            <a th:href="@{/applications}" th:class="${currentStatus == null} ? 'chip active' : 'chip'">All</a>
+            <a th:each="s : ${statuses}"
+               th:href="@{/applications(status=${s.name()}, search=${currentSearch})}"
+               th:class="${currentStatus == s.name()} ? 'chip active' : 'chip'"
+               th:text="${s.displayName}">Status</a>
+        </div>
+    </form>
+
+    <div th:if="${#lists.isEmpty(applications)}" class="empty-state">
+<!--        <div class="empty-icon">&#x1F4ED;</div>-->
+        <p>No applications match your filters.</p>
+        <a th:href="@{/applications}" class="btn btn-secondary">Clear Filters</a>
+    </div>
+
+    <div class="table-container" th:if="${not #lists.isEmpty(applications)}">
+        <table class="app-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Applied</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="app : ${applications}" class="app-row">
+                    <td>
+                        <div class="table-company">
+                            <div class="company-avatar-sm" th:text="${#strings.substring(app.companyName, 0, 1)}">G</div>
+                            <div>
+                                <div class="fw-medium" th:text="${app.companyName}">Google</div>
+                                <div class="text-muted text-sm" th:if="${app.location}" th:text="${app.location}"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div th:text="${app.jobTitle}" class="fw-medium">Role</div>
+                        <div th:if="${app.jobUrl}" class="text-sm">
+                            <a th:href="${app.jobUrl}" target="_blank" class="link-muted">View posting &#x2197;</a>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge" th:classappend="${app.status.cssClass}" th:text="${app.status.displayName}">Status</span>
+                    </td>
+                    <td class="text-sm" th:text="${app.appliedDate != null ? #temporals.format(app.appliedDate, 'MMM d, yyyy') : '—'}">—</td>
+                    <td>
+                        <div class="action-group">
+                            <a th:href="@{/applications/{id}(id=${app.id})}" class="btn btn-sm">View</a>
+                            <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn btn-sm btn-secondary">Edit</a>
+                            <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post"
+                                  onsubmit="return confirm('Delete this application?')">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
