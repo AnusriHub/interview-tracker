@@ -1,99 +1,212 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head><title th:text="${isEdit ? 'Edit Application' : 'New Application'}">Application</title></head>
+
+<head>
+    <title th:text="${isEdit ? 'Edit Application' : 'New Application'}">
+        Application
+    </title>
+</head>
+
 <body>
 <div layout:fragment="content">
 
     <div class="page-header">
         <div>
-            <h1 class="page-title" th:text="${isEdit ? 'Edit Application' : 'New Application'}">Application</h1>
-            <p class="page-subtitle" th:text="${isEdit ? 'Update application details' : 'Track a new job application'}"></p>
+            <h1 class="page-title"
+                th:text="${isEdit ? 'Edit Application' : 'New Application'}">
+                Application
+            </h1>
+
+            <p class="page-subtitle"
+               th:text="${isEdit
+                         ? 'Update your application details'
+                         : 'Add a job application to your tracker'}">
+            </p>
         </div>
-        <a th:href="@{/applications}" class="btn btn-secondary">&larr; Back</a>
+
+        <a th:href="@{/applications}"
+           class="btn btn-secondary">
+            &larr; Back
+        </a>
     </div>
 
     <div class="form-container">
-        <form th:action="${isEdit ? '/applications/' + application.id + '/edit' : '/applications/new'}"
-              th:object="${application}" method="post" class="app-form">
 
+        <form th:action="${isEdit
+                          ? '/applications/' + application.id + '/edit'
+                          : '/applications/new'}"
+              th:object="${application}"
+              method="post"
+              class="app-form">
+
+            <!-- Company details -->
             <div class="form-section">
                 <h3 class="form-section-title">Company Details</h3>
+
                 <div class="form-grid">
+
                     <div class="form-group required">
                         <label for="companyName">Company Name</label>
-                        <input type="text" id="companyName" th:field="*{companyName}"
-                               placeholder="e.g. Google, Stripe, Airbnb" class="form-input"
-                               th:classappend="${#fields.hasErrors('companyName')} ? ' input-error'">
-                        <span class="field-error" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></span>
+
+                        <input type="text"
+                               id="companyName"
+                               th:field="*{companyName}"
+                               placeholder="e.g. Google, Stripe, Airbnb"
+                               class="form-input"
+                               th:classappend="${#fields.hasErrors('companyName')}
+                                               ? ' input-error'">
+
+                        <span class="field-error"
+                              th:if="${#fields.hasErrors('companyName')}"
+                              th:errors="*{companyName}">
+                        </span>
                     </div>
+
                     <div class="form-group required">
                         <label for="jobTitle">Job Title</label>
-                        <input type="text" id="jobTitle" th:field="*{jobTitle}"
-                               placeholder="e.g. Software Engineer Intern" class="form-input"
-                               th:classappend="${#fields.hasErrors('jobTitle')} ? ' input-error'">
-                        <span class="field-error" th:if="${#fields.hasErrors('jobTitle')}" th:errors="*{jobTitle}"></span>
+
+                        <input type="text"
+                               id="jobTitle"
+                               th:field="*{jobTitle}"
+                               placeholder="e.g. Software Engineer Intern"
+                               class="form-input"
+                               th:classappend="${#fields.hasErrors('jobTitle')}
+                                               ? ' input-error'">
+
+                        <span class="field-error"
+                              th:if="${#fields.hasErrors('jobTitle')}"
+                              th:errors="*{jobTitle}">
+                        </span>
                     </div>
+
                     <div class="form-group">
                         <label for="location">Location</label>
-                        <input type="text" id="location" th:field="*{location}"
-                               placeholder="e.g. San Francisco, CA (Remote)" class="form-input">
+
+                        <input type="text"
+                               id="location"
+                               th:field="*{location}"
+                               placeholder="e.g. Chennai, India or Remote"
+                               class="form-input">
                     </div>
+
                     <div class="form-group">
                         <label for="jobUrl">Job Posting URL</label>
-                        <input type="url" id="jobUrl" th:field="*{jobUrl}" placeholder="https://..." class="form-input">
+
+                        <input type="url"
+                               id="jobUrl"
+                               th:field="*{jobUrl}"
+                               placeholder="https://..."
+                               class="form-input">
                     </div>
+
                 </div>
             </div>
 
+            <!-- Status and dates -->
             <div class="form-section">
                 <h3 class="form-section-title">Status &amp; Dates</h3>
+
                 <div class="form-grid">
+
                     <div class="form-group required">
                         <label for="status">Application Status</label>
-                        <select id="status" th:field="*{status}" class="form-select">
-                            <option th:each="s : ${statuses}" th:value="${s.name()}" th:text="${s.displayName}">Status</option>
+
+                        <select id="status"
+                                th:field="*{status}"
+                                class="form-select">
+
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s.name()}"
+                                    th:text="${s.displayName}">
+                                Status
+                            </option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="appliedDate">Date Applied</label>
-                        <input type="date" id="appliedDate" th:field="*{appliedDate}" class="form-input">
+
+                        <input type="date"
+                               id="appliedDate"
+                               th:field="*{appliedDate}"
+                               class="form-input">
                     </div>
+
                 </div>
             </div>
 
+            <!-- Contact -->
             <div class="form-section">
-                <h3 class="form-section-title">Contact Person <span class="optional-tag">optional</span></h3>
+                <h3 class="form-section-title">
+                    Contact Person
+                    <span class="optional-tag">optional</span>
+                </h3>
+
                 <div class="form-grid">
+
                     <div class="form-group">
                         <label for="contactPerson">Name</label>
-                        <input type="text" id="contactPerson" th:field="*{contactPerson}"
-                               placeholder="Recruiter or HM name" class="form-input">
+
+                        <input type="text"
+                               id="contactPerson"
+                               th:field="*{contactPerson}"
+                               placeholder="Recruiter or hiring manager"
+                               class="form-input">
                     </div>
+
                     <div class="form-group">
                         <label for="contactEmail">Email</label>
-                        <input type="email" id="contactEmail" th:field="*{contactEmail}"
-                               placeholder="recruiter@company.com" class="form-input">
+
+                        <input type="email"
+                               id="contactEmail"
+                               th:field="*{contactEmail}"
+                               placeholder="recruiter@company.com"
+                               class="form-input">
                     </div>
+
                 </div>
             </div>
 
+            <!-- Notes -->
             <div class="form-section">
                 <h3 class="form-section-title">Notes</h3>
+
                 <div class="form-group">
-                    <textarea id="notes" th:field="*{notes}" class="form-textarea"
-                              placeholder="Interview prep notes, links, feedback, follow-up actions..." rows="5"></textarea>
+                    <textarea id="notes"
+                              th:field="*{notes}"
+                              class="form-textarea"
+                              placeholder="Interview notes, follow-ups, or anything you want to remember..."
+                              rows="5">
+                    </textarea>
                 </div>
             </div>
 
+            <!-- Actions -->
             <div class="form-actions">
-                <a th:href="@{/applications}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary" th:text="${isEdit ? 'Save Changes' : 'Add Application'}">Submit</button>
+
+                <a th:href="@{/applications}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        th:text="${isEdit
+                                  ? 'Save Changes'
+                                  : 'Add Application'}">
+                    Submit
+                </button>
+
             </div>
+
         </form>
+
     </div>
 
 </div>
 </body>
 </html>
+

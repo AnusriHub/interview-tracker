@@ -23,6 +23,7 @@ public class ApiController {
     public List<JobApplication> getApplications(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String search) {
+
         return service.filterApplications(status, search);
     }
 
@@ -35,25 +36,35 @@ public class ApiController {
     public ResponseEntity<Map<String, Object>> quickStatusUpdate(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
-        return (ResponseEntity<Map<String, Object>>) service.getById(id).map(app -> {
-            try {
-                ApplicationStatus newStatus = ApplicationStatus.valueOf(body.get("status"));
-                var dto = service.toDto(app);
-                dto.setStatus(newStatus);
-                service.update(id, dto);
-                Map<String, Object> resp = new HashMap<>();
-                resp.put("success", true);
-                resp.put("status", newStatus.getDisplayName());
-                resp.put("cssClass", newStatus.getCssClass());
-                return ResponseEntity.ok(resp);
-            } catch (Exception e) {
-                return ResponseEntity.<Map<String, Object>>badRequest().build();
-            }
-        }).orElseGet(() -> {
-            Map<String, Object> resp = new HashMap<>();
-            resp.put("success", false);
-            resp.put("message", "Application not found");
-            return ResponseEntity.status(404).body(resp);
-        });
+
+        var application = service.getById(id);
+
+        if (application.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Application not found");
+
+            return ResponseEntity.status(404).body(response);
+        }
+
+        try {
+            ApplicationStatus newStatus =
+                    ApplicationStatus.valueOf(body.get("status"));
+
+            var dto = service.toDto(application.get());
+            dto.setStatus(newStatus);
+
+            service.update(id, dto);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("status", newStatus.getDisplayName());
+            response.put("cssClass", newStatus.getCssClass());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

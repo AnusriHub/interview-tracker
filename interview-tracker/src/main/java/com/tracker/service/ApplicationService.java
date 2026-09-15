@@ -1,3 +1,4 @@
+
 package com.tracker.service;
 
 import com.tracker.dto.ApplicationDTO;
@@ -24,12 +25,23 @@ public class ApplicationService {
     }
 
     public List<JobApplication> filterApplications(String status, String search) {
-        ApplicationStatus appStatus = null;
+        ApplicationStatus applicationStatus = null;
+
         if (status != null && !status.isEmpty()) {
-            try { appStatus = ApplicationStatus.valueOf(status); } catch (Exception ignored) {}
+            try {
+                applicationStatus = ApplicationStatus.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                applicationStatus = null;
+            }
         }
-        String searchTerm = (search != null && !search.trim().isEmpty()) ? search.trim() : null;
-        return repository.findByFilters(appStatus, searchTerm);
+
+        String searchTerm = null;
+
+        if (search != null && !search.trim().isEmpty()) {
+            searchTerm = search.trim();
+        }
+
+        return repository.findByFilters(applicationStatus, searchTerm);
     }
 
     public Optional<JobApplication> getById(Long id) {
@@ -37,16 +49,20 @@ public class ApplicationService {
     }
 
     public JobApplication save(ApplicationDTO dto) {
-        JobApplication app = new JobApplication();
-        mapDtoToEntity(dto, app);
-        return repository.save(app);
+        JobApplication application = new JobApplication();
+
+        mapDtoToEntity(dto, application);
+
+        return repository.save(application);
     }
 
     public JobApplication update(Long id, ApplicationDTO dto) {
-        JobApplication app = repository.findById(id)
+        JobApplication application = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Application not found: " + id));
-        mapDtoToEntity(dto, app);
-        return repository.save(app);
+
+        mapDtoToEntity(dto, application);
+
+        return repository.save(application);
     }
 
     public void delete(Long id) {
@@ -55,41 +71,52 @@ public class ApplicationService {
 
     public DashboardStats getDashboardStats() {
         long total = repository.count();
+
+        long applied = repository.countByStatus(ApplicationStatus.APPLIED);
+        long oa = repository.countByStatus(ApplicationStatus.OA);
+        long interview = repository.countByStatus(ApplicationStatus.INTERVIEW);
+        long offer = repository.countByStatus(ApplicationStatus.OFFER);
+        long rejected = repository.countByStatus(ApplicationStatus.REJECTED);
+        long withdrawn = repository.countByStatus(ApplicationStatus.WITHDRAWN);
+
         return new DashboardStats(
                 total,
-                repository.countByStatus(ApplicationStatus.APPLIED),
-                repository.countByStatus(ApplicationStatus.OA),
-                repository.countByStatus(ApplicationStatus.INTERVIEW),
-                repository.countByStatus(ApplicationStatus.OFFER),
-                repository.countByStatus(ApplicationStatus.REJECTED),
-                repository.countByStatus(ApplicationStatus.WITHDRAWN)
+                applied,
+                oa,
+                interview,
+                offer,
+                rejected,
+                withdrawn
         );
     }
 
-    public ApplicationDTO toDto(JobApplication app) {
+    public ApplicationDTO toDto(JobApplication application) {
         ApplicationDTO dto = new ApplicationDTO();
-        dto.setId(app.getId());
-        dto.setCompanyName(app.getCompanyName());
-        dto.setJobTitle(app.getJobTitle());
-        dto.setJobUrl(app.getJobUrl());
-        dto.setLocation(app.getLocation());
-        dto.setStatus(app.getStatus());
-        dto.setAppliedDate(app.getAppliedDate());
-        dto.setNotes(app.getNotes());
-        dto.setContactPerson(app.getContactPerson());
-        dto.setContactEmail(app.getContactEmail());
+
+        dto.setId(application.getId());
+        dto.setCompanyName(application.getCompanyName());
+        dto.setJobTitle(application.getJobTitle());
+        dto.setJobUrl(application.getJobUrl());
+        dto.setLocation(application.getLocation());
+        dto.setStatus(application.getStatus());
+        dto.setAppliedDate(application.getAppliedDate());
+        dto.setNotes(application.getNotes());
+        dto.setContactPerson(application.getContactPerson());
+        dto.setContactEmail(application.getContactEmail());
+
         return dto;
     }
 
-    private void mapDtoToEntity(ApplicationDTO dto, JobApplication app) {
-        app.setCompanyName(dto.getCompanyName());
-        app.setJobTitle(dto.getJobTitle());
-        app.setJobUrl(dto.getJobUrl());
-        app.setLocation(dto.getLocation());
-        app.setStatus(dto.getStatus());
-        app.setAppliedDate(dto.getAppliedDate());
-        app.setNotes(dto.getNotes());
-        app.setContactPerson(dto.getContactPerson());
-        app.setContactEmail(dto.getContactEmail());
+    private void mapDtoToEntity(ApplicationDTO dto, JobApplication application) {
+        application.setCompanyName(dto.getCompanyName());
+        application.setJobTitle(dto.getJobTitle());
+        application.setJobUrl(dto.getJobUrl());
+        application.setLocation(dto.getLocation());
+        application.setStatus(dto.getStatus());
+        application.setAppliedDate(dto.getAppliedDate());
+        application.setNotes(dto.getNotes());
+        application.setContactPerson(dto.getContactPerson());
+        application.setContactEmail(dto.getContactEmail());
     }
 }
+

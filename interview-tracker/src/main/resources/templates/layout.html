@@ -1,39 +1,92 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title layout:title-pattern="$CONTENT_TITLE">Interview Tracker</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
+
 <body>
+
 <nav class="navbar">
+
     <a th:href="@{/}" class="nav-brand">
-<!--        <span class="nav-logo">&#x26A1;</span>-->
         <span class="nav-title">Interview Tracker</span>
     </a>
+
     <div class="nav-links">
-        <a th:href="@{/}" th:class="${activePage == 'dashboard'} ? 'nav-link active' : 'nav-link'">Dashboard</a>
-        <a th:href="@{/applications}" th:class="${activePage == 'applications'} ? 'nav-link active' : 'nav-link'">Applications</a>
-        <a th:href="@{/applications/new}" class="btn-nav-new">+ Add New</a>
+
+        <a th:href="@{/}"
+           th:class="${activePage == 'dashboard'} ? 'nav-link active' : 'nav-link'">
+            Dashboard
+        </a>
+
+        <a th:href="@{/applications}"
+           th:class="${activePage == 'applications'} ? 'nav-link active' : 'nav-link'">
+            Applications
+        </a>
+
+        <a th:href="@{/applications/new}"
+           class="btn-nav-new">
+            Add Application
+        </a>
+
     </div>
+
 </nav>
+
 <main class="main-content">
-    <div th:if="${successMessage}" class="alert alert-success">
-        <span>&#x2713;</span>
+
+    <div th:if="${successMessage}"
+         class="alert alert-success">
+
+        <span>&#10003;</span>
+
         <span th:text="${successMessage}"></span>
-        <button onclick="this.parentElement.remove()" class="alert-close">&#xD7;</button>
+
+        <button type="button"
+                onclick="this.parentElement.remove()"
+                class="alert-close">
+            &times;
+        </button>
+
     </div>
-    <div th:if="${errorMessage}" class="alert alert-error">
+
+    <div th:if="${errorMessage}"
+         class="alert alert-error">
+
         <span>!</span>
+
         <span th:text="${errorMessage}"></span>
-        <button onclick="this.parentElement.remove()" class="alert-close">&#xD7;</button>
+
+        <button type="button"
+                onclick="this.parentElement.remove()"
+                class="alert-close">
+            &times;
+        </button>
+
     </div>
-    <div layout:fragment="content">Page content</div>
+
+    <div layout:fragment="content">
+        Page content
+    </div>
+
 </main>
+
 <script th:src="@{/js/main.js}"></script>
+
 </body>
 </html>
+

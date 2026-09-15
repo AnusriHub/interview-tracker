@@ -1,45 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head><title th:text="${app.companyName}">Application</title></head>
+
+<head>
+    <title th:text="${app.companyName}">Application</title>
+</head>
+
 <body>
 <div layout:fragment="content">
 
     <div class="page-header">
         <div class="detail-header">
-            <div class="company-avatar-lg" th:text="${#strings.substring(app.companyName, 0, 1)}">G</div>
+            <div class="company-avatar-lg"
+                 th:text="${#strings.substring(app.companyName, 0, 1)}">
+                G
+            </div>
+
             <div>
-                <h1 class="page-title" th:text="${app.companyName}">Google</h1>
-                <p class="page-subtitle" th:text="${app.jobTitle}">Software Engineer</p>
+                <h1 class="page-title" th:text="${app.companyName}">
+                    Google
+                </h1>
+                <p class="page-subtitle" th:text="${app.jobTitle}">
+                    Software Engineer
+                </p>
             </div>
         </div>
+
         <div class="header-actions">
-            <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="btn btn-secondary">Edit</a>
-            <a th:href="@{/applications}" class="btn btn-secondary">&larr; Back</a>
+            <a th:href="@{/applications/{id}/edit(id=${app.id})}"
+               class="btn btn-secondary">
+                Edit
+            </a>
+
+            <a th:href="@{/applications}"
+               class="btn btn-secondary">
+                &larr; Back
+            </a>
         </div>
     </div>
 
     <div class="detail-layout">
+
         <div class="detail-main">
 
-            <div  class="detail-card">
+            <div class="detail-card">
                 <h3 class="card-title">Pipeline</h3>
+
                 <div class="status-pipeline">
                     <div th:each="s : ${T(com.tracker.model.ApplicationStatus).values()}"
-                         th:class="${app.status == s} ? 'pipeline-step step-active' : (${app.status.ordinal() > s.ordinal()} ? 'pipeline-step step-done' : 'pipeline-step step-pending')">
+                         th:class="${app.status == s}
+                                  ? 'pipeline-step step-active'
+                                  : (${app.status.ordinal() > s.ordinal()}
+                                     ? 'pipeline-step step-done'
+                                     : 'pipeline-step step-pending')">
+
                         <div class="step-dot"></div>
-                        <div class="step-label" th:text="${s.displayName}">Status</div>
+
+                        <div class="step-label"
+                             th:text="${s.displayName}">
+                            Status
+                        </div>
                     </div>
                 </div>
+
                 <div class="quick-status">
-                    <span class="text-sm text-muted">Quick update:</span>
-                    <form th:action="@{/applications/{id}/status(id=${app.id})}" method="post" class="inline-form">
-                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <span class="text-sm text-muted">
+                        Update status:
+                    </span>
+
+                    <form th:action="@{/applications/{id}/status(id=${app.id})}"
+                          method="post"
+                          class="inline-form">
+
+                        <select name="status"
+                                class="form-select form-select-sm"
+                                onchange="this.form.submit()">
+
                             <option th:each="s : ${T(com.tracker.model.ApplicationStatus).values()}"
                                     th:value="${s.name()}"
                                     th:text="${s.displayName}"
-                                    th:selected="${app.status == s}">Status</option>
+                                    th:selected="${app.status == s}">
+                                Status
+                            </option>
                         </select>
                     </form>
                 </div>
@@ -47,63 +91,116 @@
 
             <div class="detail-card">
                 <h3 class="card-title">Notes</h3>
-                <div th:if="${app.notes != null and not #strings.isEmpty(app.notes)}" class="notes-content" th:text="${app.notes}"></div>
-                <p th:if="${app.notes == null or #strings.isEmpty(app.notes)}" class="text-muted">
-                    No notes yet. <a th:href="@{/applications/{id}/edit(id=${app.id})}" class="link">Add some &rarr;</a>
+
+                <div th:if="${app.notes != null and not #strings.isEmpty(app.notes)}"
+                     class="notes-content"
+                     th:text="${app.notes}">
+                </div>
+
+                <p th:if="${app.notes == null or #strings.isEmpty(app.notes)}"
+                   class="text-muted">
+                    No notes yet.
+                    <a th:href="@{/applications/{id}/edit(id=${app.id})}"
+                       class="link">
+                        Add notes &rarr;
+                    </a>
                 </p>
             </div>
 
         </div>
 
         <div class="detail-sidebar">
+
             <div class="detail-card">
                 <h3 class="card-title">Details</h3>
+
                 <dl class="detail-list">
+
                     <div th:if="${app.location}">
                         <dt>Location</dt>
                         <dd th:text="${app.location}"></dd>
                     </div>
+
                     <div>
                         <dt>Status</dt>
-                        <dd><span class="status-badge" th:classappend="${app.status.cssClass}" th:text="${app.status.displayName}"></span></dd>
+                        <dd>
+                            <span class="status-badge"
+                                  th:classappend="${app.status.cssClass}"
+                                  th:text="${app.status.displayName}">
+                            </span>
+                        </dd>
                     </div>
+
                     <div>
                         <dt>Applied</dt>
-                        <dd th:text="${app.appliedDate != null ? #temporals.format(app.appliedDate, 'MMM d, yyyy') : 'Not set'}"></dd>
+                        <dd th:text="${app.appliedDate != null
+                                      ? #temporals.format(app.appliedDate, 'MMM d, yyyy')
+                                      : 'Not set'}">
+                        </dd>
                     </div>
+
                     <div th:if="${app.jobUrl}">
                         <dt>Posting</dt>
-                        <dd><a th:href="${app.jobUrl}" target="_blank" class="link">View &#x2197;</a></dd>
+                        <dd>
+                            <a th:href="${app.jobUrl}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="link">
+                                View &nearr;
+                            </a>
+                        </dd>
                     </div>
+
                     <div>
                         <dt>Added</dt>
-                        <dd th:text="${#temporals.format(app.createdAt, 'MMM d, yyyy')}"></dd>
+                        <dd th:text="${#temporals.format(app.createdAt, 'MMM d, yyyy')}">
+                        </dd>
                     </div>
+
                 </dl>
             </div>
 
-            <div class="detail-card" th:if="${app.contactPerson != null or app.contactEmail != null}">
+            <div class="detail-card"
+                 th:if="${app.contactPerson != null or app.contactEmail != null}">
+
                 <h3 class="card-title">Contact</h3>
+
                 <dl class="detail-list">
+
                     <div th:if="${app.contactPerson}">
                         <dt>Name</dt>
                         <dd th:text="${app.contactPerson}"></dd>
                     </div>
+
                     <div th:if="${app.contactEmail}">
                         <dt>Email</dt>
-                        <dd><a th:href="'mailto:' + ${app.contactEmail}" class="link" th:text="${app.contactEmail}"></a></dd>
+                        <dd>
+                            <a th:href="'mailto:' + ${app.contactEmail}"
+                               class="link"
+                               th:text="${app.contactEmail}">
+                            </a>
+                        </dd>
                     </div>
+
                 </dl>
             </div>
 
             <div class="detail-card card-danger">
-                <h3 class="card-title">Danger Zone</h3>
-                <form th:action="@{/applications/{id}/delete(id=${app.id})}" method="post"
-                      onsubmit="return confirm('Delete this application? This cannot be undone.')">
-                    <button type="submit" class="btn btn-danger btn-full">Delete Application</button>
+                <h3 class="card-title">Delete</h3>
+
+                <form th:action="@{/applications/{id}/delete(id=${app.id})}"
+                      method="post"
+                      onsubmit="return confirm('Delete this application? This cannot be undone.');">
+
+                    <button type="submit"
+                            class="btn btn-danger btn-full">
+                        Delete Application
+                    </button>
                 </form>
             </div>
+
         </div>
+
     </div>
 
 </div>

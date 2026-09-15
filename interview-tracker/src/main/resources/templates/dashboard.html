@@ -1,76 +1,135 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
-<head><title>Dashboard</title></head>
+
+<head>
+    <title>Dashboard</title>
+</head>
+
 <body>
 <div layout:fragment="content">
 
     <div class="page-header">
         <div>
             <h1 class="page-title">Dashboard</h1>
-            <p class="page-subtitle">Your job hunt at a glance</p>
+            <p class="page-subtitle">Overview of your job applications</p>
         </div>
-        <a th:href="@{/applications/new}" class="btn btn-primary">+ Add Application</a>
+
+        <a th:href="@{/applications/new}"
+           class="btn btn-primary">
+            Add Application
+        </a>
     </div>
 
     <div class="stats-grid">
+
         <div class="stat-card">
-            <div class="stat-number" th:text="${stats.totalApplications}">0</div>
-            <div class="stat-label">Total</div>
+            <div class="stat-number"
+                 th:text="${stats.totalApplications}">
+                0
+            </div>
+            <div class="stat-label">Total Applications</div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-number stat-applied" th:text="${stats.applied}">0</div>
+            <div class="stat-number stat-applied"
+                 th:text="${stats.applied}">
+                0
+            </div>
             <div class="stat-label">Applied</div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-number stat-oa" th:text="${stats.onlineAssessment}">0</div>
-            <div class="stat-label">OA</div>
+            <div class="stat-number stat-oa"
+                 th:text="${stats.onlineAssessment}">
+                0
+            </div>
+            <div class="stat-label">Online Assessments</div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-number stat-interview" th:text="${stats.interview}">0</div>
+            <div class="stat-number stat-interview"
+                 th:text="${stats.interview}">
+                0
+            </div>
             <div class="stat-label">Interviews</div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-number stat-offer" th:text="${stats.offer}">0</div>
+            <div class="stat-number stat-offer"
+                 th:text="${stats.offer}">
+                0
+            </div>
             <div class="stat-label">Offers</div>
         </div>
+
         <div class="stat-card">
-            <div class="stat-number stat-rejected" th:text="${stats.rejected}">0</div>
+            <div class="stat-number stat-rejected"
+                 th:text="${stats.rejected}">
+                0
+            </div>
             <div class="stat-label">Rejected</div>
         </div>
+
     </div>
 
     <div class="rates-row">
+
         <div class="rate-card">
             <div class="rate-label">Interview Rate</div>
-            <div class="rate-value" th:text="${stats.interviewRate} + '%'">0%</div>
+
+            <div class="rate-value"
+                 th:text="${stats.interviewRate} + '%'">
+                0%
+            </div>
+
             <div class="rate-bar">
-                <div class="rate-fill rate-fill-interview" th:style="'width:' + ${stats.interviewRate} + '%'"></div>
+                <div class="rate-fill rate-fill-interview"
+                     th:style="'width:' + ${stats.interviewRate} + '%'">
+                </div>
             </div>
         </div>
+
         <div class="rate-card">
             <div class="rate-label">Offer Rate</div>
-            <div class="rate-value" th:text="${stats.successRate} + '%'">0%</div>
+
+            <div class="rate-value"
+                 th:text="${stats.successRate} + '%'">
+                0%
+            </div>
+
             <div class="rate-bar">
-                <div class="rate-fill rate-fill-offer" th:style="'width:' + ${stats.successRate} + '%'"></div>
+                <div class="rate-fill rate-fill-offer"
+                     th:style="'width:' + ${stats.successRate} + '%'">
+                </div>
             </div>
         </div>
+
     </div>
 
     <div class="section-header">
         <h2 class="section-title">Recent Applications</h2>
-        <a th:href="@{/applications}" class="section-link">View all &rarr;</a>
+
+        <a th:href="@{/applications}"
+           class="section-link">
+            View all &rarr;
+        </a>
     </div>
 
-    <div th:if="${#lists.isEmpty(recentApps)}" class="empty-state">
-        <p>No applications yet. Start tracking your job search!</p>
-        <a th:href="@{/applications/new}" class="btn btn-primary">Add First Application</a>
+    <div th:if="${#lists.isEmpty(recentApps)}"
+         class="empty-state">
+
+        <p>No applications yet.</p>
+
+        <a th:href="@{/applications/new}"
+           class="btn btn-primary">
+            Add First Application
+        </a>
     </div>
 
-
-    </div>
-
-
+</div>
 </body>
 </html>
+
